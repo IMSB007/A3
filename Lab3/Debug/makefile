@@ -14,6 +14,7 @@ ORDERED_OBJS += \
 "../tm4c123gh6pm.cmd" \
 $(GEN_CMDS__FLAG) \
 -llibc.a \
+-l"/Users/alexchen/ti/tivaware_c_series_2_1_4_178/driverlib/ccs/Debug/driverlib.lib" \
 
 -include ../makefile.init
 
@@ -126,10 +127,10 @@ EXE_OUTPUTS__QUOTED += \
 "CPE403-Assignment3.out" \
 
 BIN_OUTPUTS += \
-CPE403-Assignment3.hex \
+CPE403-Assignment3.bin \
 
 BIN_OUTPUTS__QUOTED += \
-"CPE403-Assignment3.hex" \
+"CPE403-Assignment3.bin" \
 
 
 # All Target
@@ -143,12 +144,14 @@ CPE403-Assignment3.out: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
 	"/Applications/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.3.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --define=ccs="ccs" --define=PART_TM4C123GH6PM -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"CPE403-Assignment3.map" --heap_size=0 --stack_size=512 -i"/Applications/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.3.LTS/lib" -i"/Applications/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.3.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="CPE403-Assignment3_linkInfo.xml" --rom_model -o "CPE403-Assignment3.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: $@'
 	@echo ' '
+	@$(MAKE) --no-print-directory post-build
 
-CPE403-Assignment3.hex: $(EXE_OUTPUTS)
+CPE403-Assignment3.bin: $(EXE_OUTPUTS)
 	@echo 'Invoking: ARM Hex Utility'
-	"/Applications/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.3.LTS/bin/armhex"  -o "CPE403-Assignment3.hex" $(EXE_OUTPUTS__QUOTED)
+	"/Applications/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.3.LTS/bin/armhex"  -o "CPE403-Assignment3.bin" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $@'
 	@echo ' '
+	@$(MAKE) --no-print-directory post-build
 
 # Other Targets
 clean:
@@ -156,6 +159,10 @@ clean:
 	-$(RM) "main.obj" "tm4c123gh6pm_startup_ccs.obj" 
 	-$(RM) "main.d" "tm4c123gh6pm_startup_ccs.d" 
 	-@echo 'Finished clean'
+	-@echo ' '
+
+post-build:
+	-"/Applications/ti/ccsv7/utils/tiobj2bin/tiobj2bin" "CPE403-Assignment3.out" "CPE403-Assignment3.bin" "/Applications/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.3.LTS/bin/armofd" "/Applications/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.3.LTS/bin/armhex" "/Applications/ti/ccsv7/utils/tiobj2bin/mkhex4bin"
 	-@echo ' '
 
 .PHONY: all clean dependents
